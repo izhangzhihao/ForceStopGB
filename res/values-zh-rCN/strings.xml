@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">阻止运行</string>
+
+    <string name="soak_version">这是测试版本，可能导致您的机器无法运行。如果不想参加测试，请恢复至正式版本。</string>
+
+    <!-- xposed -->
+    <string name="xposed_summary">阻止程序自动运行</string>
+    <string name="xposed_disabled">请在“Xposed Installer”中启用“阻止运行”，或者先禁用再启用“阻止运行”。</string>
+    <string name="install_internal">“阻止运行”应该安装在内部存储。</string>
+    <string name="no_xposed">请先安装“Xposed Installer”，或者给ROM打“阻止运行”补丁。</string>
+
+    <!-- receiver -->
+    <string name="no_prevents">请配置“阻止列表”。</string>
+    <string name="updated_prevents">成功更新阻止列表，共%1$d条</string>
+    <string name="not_supported">暂不支持您的系统，请报告问题。</string>
+
+    <!-- main activity -->
+    <string name="version_mismatch">请重启激活当前版本</string>
+    <string name="reboot">重启</string>
+    <string name="are_you_sure">你确定？</string>
+    <string name="applications">所有程序</string>
+    <string name="prevent_list">阻止列表</string>
+    <string name="prevent">自动阻止</string>
+    <string name="remove">不再阻止</string>
+
+    <!-- search hint -->
+    <string name="query_hint">\"-3\"为已下载应用</string>
+    <string name="query_hint_system">\"-s\"为系统应用</string>
+
+    <!-- main menu -->
+    <string name="switch_theme">切换主题</string>
+    <string name="user_guide">用户指南</string>
+
+    <!-- app status -->
+    <string name="retrieving">正在获取数据，请稍候. . .</string>
+    <string name="loading">正在加载. . .</string>
+    <string name="not_running">(没有运行)</string>
+    <string name="importance_background">后台</string>
+    <string name="importance_foreground">前台</string>
+    <string name="importance_empty">空</string>
+    <string name="importance_perceptible">察觉</string>
+    <string name="importance_service">服务</string>
+    <string name="importance_visible">可见</string>
+    <string name="importance_gone">无</string>
+    <string name="importance_foreground_service">前台服务</string>
+    <string name="importance_top_sleeping">前台休眠</string>
+    <string name="importance_service_not_started">服务(没有开始)</string>
+
+    <!-- app menu -->
+    <string name="app_info">程序信息</string>
+    <string name="open">打开</string>
+    <string name="uninstall">卸载</string>
+    <string name="app_notifications">应用通知</string>
+
+    <!-- advanced settings -->
+    <string name="destroy_processes">不保留进程</string>
+    <string name="destroy_processes_summary">用户退出后强行停止程序（强烈推荐关闭）</string>
+    <string name="backup">备份</string>
+    <string name="backup_prevent_list">将阻止列表备份到外部存储</string>
+    <string name="lock_sync">同步锁定</string>
+    <string name="lock_sync_settings">阻止应用开启已经关闭的同步设置</string>
+    <string name="auto_prevent">自动阻止</string>
+    <string name="auto_update_prevent">自动阻止新装程序</string>
+    <string name="use_app_standby">休眠应用</string>
+    <string name="use_app_standby_settings">使用休眠代替强行停止</string>
+    <string name="allow_empty_sender">允许未知唤醒</string>
+    <string name="allow_empty_sender_in_service">这个有助于在通知栏或者小部件中直接打开应用，但也有些副作用</string>
+    <string name="force_stop_signature_apps">强行停止重要系统应用</string>
+    <string name="force_stop_uncheckable_signature_apps">这些应用不能选中，也只有获取“阻止全部”许可后才能添加到阻止列表</string>
+    <string name="force_stop_label">强行停止后台程序</string>
+    <string name="force_stop_summary">后台程序无操作%1$s后（屏幕关闭时处理）</string>
+    <string name="force_stop_never">永不（推荐）</string>
+    <string name="force_stop_5min">5分钟</string>
+    <string name="force_stop_10min">10分钟</string>
+    <string name="force_stop_15min">15分钟</string>
+    <string name="force_stop_30min">30分钟</string>
+    <string name="force_stop_1hour">1小时</string>
+
+    <!-- request license -->
+    <string name="no_license">感谢捐赠，敬请联系作者发放捐赠证明。10元以下，不单独发放捐赠证明；10元，发放普通不记名捐赠；20元，可以指定捐赠名称；30元，可以阻止和系统同一签名的应用。</string>
+    <string name="no_valid_license">您没有权限使用颁发给“%1$s”的捐赠证明，请重新获取。</string>
+    <string name="email_request">邮件获取</string>
+    <string name="copy_request">复制请求</string>
+
+    <!-- user guide menu -->
+    <string name="donate">捐赠</string>
+    <string name="version">版本</string>
+    <string name="feedback">反馈</string>
+    <string name="report_bug">报告问题</string>
+    <string name="request_license">捐赠留名</string>
+    <string name="advanced_settings">强迫症设置</string>
+    <string name="choose_email">请选择邮件客户端</string>
+
+    <!-- donation -->
+    <string name="donation">如果喜欢，请随(duo)意(duo)捐赠</string>
+    <string name="select_qr_code">请点击菜单，从相册选取二维码</string>
+    <string name="paypal">贝宝</string>
+
+    <!-- version -->
+    <string name="licensed">授权给尊贵的SVIP用户使用</string>
+
+    <!-- google play in-app billing -->
+    <string name="play_verify_error">无法验证您的购买，请不要破解 Google Play 应用内结算。</string>
+
+</resources>

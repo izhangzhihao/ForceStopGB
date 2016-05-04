@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">阻止運行</string>
+
+    <string name="soak_version">這是測試版本，可能導致您的機器無法運行。如果不想參加測試，請恢復至正式版本。</string>
+
+    <!-- xposed -->
+    <string name="xposed_summary">阻止程式自動運行</string>
+    <string name="xposed_disabled">請在『Xposed Installer』中啟用『阻止運行』，或者先禁用再啟用『阻止運行』。 </string>
+    <string name="install_internal">『阻止運行』應當安裝在內部存儲。</string>
+    <string name="no_xposed">請先安裝『Xposed Installer』，或者給ROM打『阻止運行』補丁。</string>
+
+    <!-- receiver -->
+    <string name="no_prevents">請配置『阻止列表』。 </string>
+    <string name="updated_prevents">成功更新阻止列表，共%1$d條</string>
+    <string name="not_supported">暫不支持您的系統，請回報錯誤。</string>
+
+    <!-- main activity -->
+    <string name="version_mismatch">請重啟激活當前版本</string>
+    <string name="reboot">重啓</string>
+    <string name="are_you_sure">您確定？</string>
+    <string name="applications">所有程式</string>
+    <string name="prevent_list">阻止列表</string>
+    <string name="prevent">自動阻止</string>
+    <string name="remove">不再阻止</string>
+
+    <!-- search hint -->
+    <string name="query_hint">\"-3\"為已下載程式</string>
+    <string name="query_hint_system">\"-s\"為系統程式</string>
+
+    <!-- main menu -->
+    <string name="switch_theme">切換主題</string>
+    <string name="user_guide">用戶指南</string>
+
+    <!-- app status -->
+    <string name="retrieving">正在獲取數據，請稍候. . .</string>
+    <string name="loading">正在加載. . .</string>
+    <string name="not_running">(沒有運行)</string>
+    <string name="importance_background">背景</string>
+    <string name="importance_foreground">前景</string>
+    <string name="importance_empty">空</string>
+    <string name="importance_perceptible">察覺</string>
+    <string name="importance_service">服務</string>
+    <string name="importance_visible">可見</string>
+    <string name="importance_gone">無</string>
+    <string name="importance_foreground_service">前景服務</string>
+    <string name="importance_top_sleeping">前景休眠</string>
+    <string name="importance_service_not_started">服務(沒有開始)</string>
+
+    <!-- app menu -->
+    <string name="app_info">程式資訊</string>
+    <string name="open">開啟</string>
+    <string name="uninstall">解除安裝</string>
+    <string name="app_notifications">程式通知</string>
+
+    <!-- advanced settings -->
+    <string name="destroy_processes">不要保留處理程式</string>
+    <string name="destroy_processes_summary">使用者退出後強制停止程式（極度推薦關閉）</string>
+    <string name="backup">備份</string>
+    <string name="backup_prevent_list">將阻止列表備份到外部記憶體</string>
+    <string name="lock_sync">同步鎖定</string>
+    <string name="lock_sync_settings">阻止程式開啟已經關閉的同步設置</string>
+    <string name="auto_prevent">自動阻止</string>
+    <string name="auto_update_prevent">自動阻止新裝程式</string>
+    <string name="use_app_standby">休眠程式</string>
+    <string name="use_app_standby_settings">使用休眠代替強制停止</string>
+    <string name="allow_empty_sender">允許未知喚醒</string>
+    <string name="allow_empty_sender_in_service">這個有助於在通知欄或者小部件中直接打開應用，但也有些副作用</string>
+    <string name="force_stop_signature_apps">強制停止重要係統應用</string>
+    <string name="force_stop_uncheckable_signature_apps">這些應用不能選中，也只有獲取“阻止全部”許可後才能添加到阻止列表</string>
+    <string name="force_stop_label">強制停止背景程式</string>
+    <string name="force_stop_summary">背景程式閒置%1$s後（螢幕關閉時處理）</string>
+    <string name="force_stop_never">永不（推薦）</string>
+    <string name="force_stop_5min">5分鐘</string>
+    <string name="force_stop_10min">10分鐘</string>
+    <string name="force_stop_15min">15分鐘</string>
+    <string name="force_stop_30min">30分鐘</string>
+    <string name="force_stop_1hour">1小時</string>
+
+    <!-- request license -->
+    <string name="no_license">請累計捐贈10元或以上，然後聯繫作者獲取許可。</string>
+    <string name="no_valid_license">您沒有權限使用頒發給『%1$s』的許可，請重新獲取。</string>
+    <string name="email_request">電郵獲取</string>
+    <string name="copy_request">複製請求</string>
+
+    <!-- user guide menu -->
+    <string name="donate">捐贈</string>
+    <string name="feedback">回饋</string>
+    <string name="version">版本</string>
+    <string name="report_bug">回報錯誤</string>
+    <string name="request_license">导入授權</string>
+    <string name="advanced_settings">進階設定</string>
+    <string name="choose_email">請選擇郵件客戶端</string>
+
+    <!-- donation -->
+    <string name="donation">如果喜歡，請隨意捐贈</string>
+    <string name="paypal">PayPal</string>
+    <string name="select_qr_code">從相簿中選擇QR Code</string>
+
+    <!-- version -->
+    <string name="licensed">已授權</string>
+
+    <!-- google play in-app billing -->
+    <string name="play_verify_error">無法核實您的購買，請不要破解 Google Play 應用內結算。</string>
+
+</resources>

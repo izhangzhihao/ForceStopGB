@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Prevent Running</string>
+
+    <string name="soak_version">Dies ist keine Releaseversion und könnte dein Gerät unnutzbar machen. Falls du nichts testen willst, deinstalliere diese Version bitte und wechsle zu einer Releaseversion.</string>
+
+    <!-- xposed -->
+    <string name="xposed_summary">Hindere Apps am Laufen</string>
+    <string name="xposed_disabled">Bitte schalte \"Prevent Running\" im \"Xposed Installer\" ein und starte dein Gerät neu.</string>
+    <string name="install_internal">Prevent Running sollte im internen Speicher installiert werden.</string>
+    <string name="no_xposed">Bitte installieren Sie \"Xposed Installer\".</string>
+
+    <!-- receiver -->
+    <string name="no_prevents">Bitte konfiguriere die Blockier-Liste.</string>
+    <string name="updated_prevents">Blockier-Liste auf %1$d aktualisiert</string>
+    <string name="not_supported">ROM wird nicht unterstützt: Bitte melden Sie den Fehler an die Entwickler.</string>
+
+    <!-- main activity -->
+    <string name="version_mismatch">Bitte starte dein Gerät neu, um die aktuelle Version zu aktivieren</string>
+    <string name="reboot">Geräte-Neustart</string>
+    <string name="are_you_sure">Bist du sicher?</string>
+    <string name="applications">Anwendungen</string>
+    <string name="prevent_list">Blockier-Liste</string>
+    <string name="prevent">Automatisch blockieren</string>
+    <string name="remove">Blockieren entfernen</string>
+
+    <!-- search hint -->
+    <string name="query_hint">\"-3\" für Benutzeranwendungen</string>
+    <string name="query_hint_system">\"-s\" für Systemanwendungen</string>
+
+    <!-- main menu -->
+    <string name="switch_theme">Schema wechseln</string>
+    <string name="user_guide">Benutzerhandbuch</string>
+
+    <!-- app status -->
+    <string name="retrieving">Status wird überprüft, bitte warten. . .</string>
+    <string name="loading">Lädt. . .</string>
+    <string name="not_running">(nicht gestartet)</string>
+    <!-- http://developer.android.com/reference/android/app/ActivityManager.RunningAppProcessInfo.html#constants -->
+    <string name="importance_background">Hintergrund</string>
+    <string name="importance_foreground">Vordergrund</string>
+    <string name="importance_empty">Leer</string>
+    <string name="importance_perceptible">Wahrnehmbar</string>
+    <string name="importance_service">Service</string>
+    <string name="importance_visible">Sichtbar</string>
+    <string name="importance_gone">Gestoppt</string>
+    <string name="importance_foreground_service">Vordergrund-Service</string>
+    <string name="importance_top_sleeping">Vordergrund-Schlafend</string>
+    <string name="importance_service_not_started">Service (Nicht gestartet)</string>
+
+    <!-- app menu -->
+    <string name="app_info">App-Info</string>
+    <string name="open">Öffnen</string>
+    <string name="uninstall">Deinstallieren</string>
+    <string name="app_notifications">App-Benachrichtigungen</string>
+
+    <!-- advanced settings -->
+    <string name="destroy_processes">Prozesse nicht speichern</string>
+    <string name="destroy_processes_summary">Beenden der Anwendung erzwingen, sobald der Benutzer alle Activities beendet hat (nicht empfohlen)</string>
+    <string name="backup">Sicherung</string>
+    <string name="backup_prevent_list">Blockier-Liste auf externen Speicher sichern</string>
+    <string name="lock_sync">Synchronisieren sperren</string>
+    <string name="lock_sync_settings">Verhindert, dass Apps deaktivierte Synchronisationseinträge wieder einschalten</string>
+    <string name="auto_prevent">Auto verhindern</string>
+    <string name="auto_update_prevent">Auto verhindern neue App</string>
+    <string name="use_app_standby">App-Ruhezustand</string>
+    <string name="use_app_standby_settings">Versetze Apps in Standby, anstatt ein Beenden zu erzwingen</string>
+    <string name="allow_empty_sender">Allow Unknown Sender (English)</string>
+    <string name="allow_empty_sender_in_service">Allow unknown sender to start service, which is useful to open some apps directly through notification or widget, however, it may has side effects (English)</string>
+    <string name="force_stop_signature_apps">Force Stop Signature Apps (English)</string>
+    <string name="force_stop_uncheckable_signature_apps">It\'s uncheckable, and cannot be added to prevent list without a \"prevent all\" license (English)</string>
+    <string name="force_stop_label">Beenden von Hintergrund-Apps erzwingen</string>
+    <string name="force_stop_summary">%1$s nach Bildschirm aus und Inaktivität der Hintergrund-Apps</string>
+    <string name="force_stop_never">Nie (Empfohlen)</string>
+    <string name="force_stop_5min">5 Minuten</string>
+    <string name="force_stop_10min">10 Minuten</string>
+    <string name="force_stop_15min">15 Minuten</string>
+    <string name="force_stop_30min">30 Minuten</string>
+    <string name="force_stop_1hour">1 Stunde</string>
+
+    <!-- request license -->
+    <string name="no_license">Bitte spende mindestens 2 USD und kontaktiere dann den Entwickler, um eine Lizenz zu erhalten.</string>
+    <string name="no_valid_license">Diese Lizenz gehört \"%1$s\", du hast keine Berechtigung, sie zu benutzen. Forder bitte eine neue an.</string>
+    <string name="email_request">E-Mail</string>
+    <string name="copy_request">@android:string/copy</string>
+
+    <!-- user guide menu -->
+    <string name="donate">Spenden</string>
+    <string name="version">Version</string>
+    <string name="feedback">Feedback</string>
+    <string name="report_bug">Fehler melden</string>
+    <string name="request_license">Lizenz anfordern</string>
+    <string name="advanced_settings">Erweiterte Einstellungen</string>
+    <string name="choose_email">Bitte wählen Sie einen E-Mail-Client aus</string>
+
+    <!-- donation -->
+    <string name="donation">Spenden sind gern gesehen, wenn du magst.</string>
+    <string name="select_qr_code">QR-Code aus Album wählen</string>
+    <string name="paypal">PayPal</string>
+
+    <!-- version -->
+    <string name="licensed">Lizenziert</string>
+
+    <!-- google play in-app billing -->
+    <string name="play_verify_error">Kauf konnte nicht überprüft werden, bitte Google Play In-app-Käufe nicht hacken.</string>
+
+</resources>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/>
+<title>Prevent Running</title>
+<style>
+code { font-size: larger }
+</style>
+</head>
+<body>
+<h2>Why this module</h2>
+
+<p>Android 3.1 introduces <a href="http://developer.android.com/about/versions/android-3.1.html#launchcontrols">Launch controls</a> on stopped applications. However, there are no such features on android 2.3, some 4.X devices didn't implement it well. Furthermore, there are some way for apps to wakeup some stopped apps.</p>
+
+<p>"<code>Prevent Running</code>" hajacks several system API to prevent not-in-use apps in <code>prevent list</code> from running or keep running. Furthermore, it applies to system apps too, specially, support google-family apps(<code>GAPPS</code>).</p>
+
+<p>Not-in-use packages in <code>prevent list</code> can only run:</p>
+
+<ul>
+<li>some other app call it's activity (share, launcher)</li>
+<li>widget on home, however, it can only run 30 seconds</li>
+<li>sync service if you allow, it can only run 30 seconds too</li>
+<li>system services (excluding normal gapps), or alipay's service</li>
+</ul>
+
+<p><strong>NOTE</strong>: When Google Play Services(<code>GMS</code>) and related apps are in <code>prevent list</code>, only <code>GAPPS</code> and <code>GCM</code>-apps can use it. However, you cannot receive <code>GCM</code> message if <code>GMS</code> is not running.</p>
+
+<p><strong>WARNING</strong>: Don't prevent <code>system</code> apps nor daily apps, otherwise, you may miss important message.</p>
+
+<p><strong>WARNING</strong>: Don't prevent "<code>Xposed Installer</code>", otherwise the module won't active when you update it.</p>
+
+<p>"<code>Prevent Running</code>" should work from android 2.3 to 6.0. However, I mainly use 5.1.</p>
+
+<h2>How to use</h2>
+
+<ol>
+<li>Install "<code>Prevent Running</code>", activate it in "<code>Xposed Installer</code>", reboot.</li>
+<li>Open "<code>Prevent Running</code>",  then add/remove application to/from prevent list.</li>
+<li>Use android normally, press <code>back</code> or remove it from recent task to exit, and press <code>HOME</code> for pause.</li>
+</ol>
+
+<p>"<code>Prevent Running</code>" would keep non-"service" processes, of cource it cannot turn to "service".</p>
+
+<h2>Special Search</h2>
+
+<ul>
+<li><code>-3</code> for <code>third</code> party apps</li>
+<li><code>-a</code> for <code>a</code>ll apps (default show third party apps and gapps)</li>
+<li><code>-s</code> for <code>s</code>ystem apps</li>
+<li><code>-e</code> for <code>e</code>nabled apps</li>
+<li><code>-r</code> for <code>r</code>unning apps</li>
+<li><code>-g</code> for <code>g</code>apps, i.e. apps from google</li>
+<li><code>-sg</code> for <code>s</code>ystem apps excluding <code>g</code>apps</li>
+</ul>
+
+<h2><a href="http://developer.android.com/intl/zh-tw/reference/android/app/ActivityManager.RunningAppProcessInfo.html#constants">Importance for Processes</a>:</h2>
+
+<h3>background</h3>
+
+<p>This process contains background code that is expendable.</p>
+
+<h3>empty</h3>
+
+<p>This process is empty of any actively running code.</p>
+
+<h3>foreground</h3>
+
+<p>This process is running the foreground UI; that is, it is the thing currently at the top of the screen that the user is interacting with.</p>
+
+<h3>foreground service (since Android 6.0)</h3>
+
+<p>This process is running a foreground service, for example to perform music playback even while the user is not immediately in the app. This generally indicates that the process is doing something the user actively cares about.</p>
+
+<h3>gone (since Android 5.0)</h3>
+
+<p>This process does not exist.</p>
+
+<h3>perceptible</h3>
+
+<p>This process is not something the user is directly aware of, but is otherwise perceptable to them to some degree.</p>
+
+<h3>service</h3>
+
+<p>This process is contains services that should remain running. These are background services apps have started, not something the user is aware of, so they may be killed by the system relatively freely (though it is generally desired that they stay running as long as they want to).</p>
+
+<h3>top sleeping (since Android 6.0)</h3>
+
+<p>This process is running the foreground UI, but the device is asleep so it is not visible to the user. This means the user is not really aware of the process, because they can not see or interact with it, but it is quite important because it what they expect to return to once unlocking the device.</p>
+
+<h3>visible</h3>
+
+<p>This process is running something that is actively visible to the user, though not in the immediate foreground. This may be running a window that is behind the current foreground (so paused and with its state saved, not interacting with the user, but visible to them to some degree); it may also be running other services under the system's control that it inconsiders important.</p>
+
+<h2>Project</h2>
+
+<p>Project: <a href="https://github.com/liudongmiao/ForceStopGB">ForceStopGB - GitHub</a>. If you like, feel free to donate.</p>
+</body>
+</html>

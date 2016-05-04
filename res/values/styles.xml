@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dark" parent="@android:style/Theme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="color_dangerous">@color/color_dangerous_dark</item>
+    </style>
+
+    <style name="light" parent="@android:style/Theme.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="color_dangerous">@color/color_dangerous_light</item>
+    </style>
+
+</resources>

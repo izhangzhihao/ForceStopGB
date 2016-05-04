@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"/>
+<title>阻止运行</title>
+<style>
+code { font-size: larger }
+</style>
+</head>
+<body>
+<h2>模块介绍</h2>
+
+<p>Android 3.1对强行停止的程序引入了<a href="http://developer.android.com/about/versions/android-3.1.html#launchcontrols">启动控制</a>。但是，在Android 2.3没有这个功能，而有些Android 4.X的设备根本没有实现。再者，很多流氓，总是有办法不断启动。</p>
+
+<p>“<code>阻止运行</code>”通过劫持几个系统API，保证<code>阻止列表</code>里的应用只在需要时才启动，同时支持谷歌家族应用。</p>
+
+<p>没有运行的<code>阻止列表</code>应用只会在以下几种情况下启动：</p>
+
+<ul>
+<li>启动器或者第三方应用启动活动(Activity)，如手动打开、分享、部分支付等；</li>
+<li>桌面小部件定时更新，但是只能运行30秒；</li>
+<li>同步开启时的定时同步，也只能运行30秒；</li>
+<li>除<code>谷歌服务</code>外的系统服务，或者支付宝的支付服务；</li>
+<li>其它可能的用户行为引起的启动。</li>
+</ul>
+
+<p><strong>注意</strong>：当<code>谷歌服务</code>在阻止列表时，只有<code>谷歌家族应用</code>和第三方的<code>GCM</code>应用可以使用。同时，当有任何一个<code>谷歌家族应用</code>没有退出时，都不会退出<code>谷歌服务</code>。当然，只有<code>GMS</code>运行时才能接收<code>GCM</code>消息，并唤醒相应应用。</p>
+
+<p><strong>警告</strong>：请谨慎阻止“系统应用”，以及常用应用。要不然，你可能无法及时收到短信或其它重要消息。“<code>阻止运行</code>”不会显示和系统同一签名的系统应用，也不会显示系统内置的启动器。</p>
+
+<p><strong>警告</strong>：请不要阻止“<code>Xposed Installer</code>”，否则模块更新时，无法更新模块路径，导致重启以后无法加载模块。</p>
+
+<p><strong>提示</strong>：有些用户无法或不愿分清<code>HOME</code>与<code>返回键</code>区别，可以开启“强行停止后台程序”，在离开程序一段时间后并黑屏时退出应用。这项功能默认关闭。</p>
+
+<p>“<code>阻止运行</code>”支持Android 2.3到6.0，本人主要在5.1上测试。(2.3请安装本人移植的xposed框架。）</p>
+
+<h2>使用说明</h2>
+
+<ol>
+<li>安装“<code>阻止运行</code>”，在“<code>Xposed Installer</code>”中激活它，重启（必须）。</li>
+<li>重启后，打开“<code>阻止运行</code>”，配置<code>阻止列表</code>(这个只需要一次)。</li>
+<li>正常使用手机，临时退出时按<code>HOME</code>，不用时按<code>返回键</code>退出或者从最近列表划掉。</li>
+</ol>
+
+<p>“<code>阻止运行</code>”不杀非<code>服务</code>的程序，但是保证非<code>服务</code>类进程不会变成<code>服务</code>在后台<strong><em>一直</em></strong>运行。</p>
+
+<p><strong>高级</strong>：在<code>Xposed Installer</code>之外，本程序提供<code>ROM补丁</code>模式，只需替换相应文件，即可直接使用“<code>阻止运行</code>”。如有需要，请联系作者；或者阅读源码目录<code>aosp</code>下的文档。</p>
+
+<h2>特别搜索</h2>
+
+<ul>
+<li><code>-3</code> 用户安装的第<code>三</code>方程序</li>
+<li><code>-a</code> 全部程序（默认仅展示第三方和谷歌家族的程序）</li>
+<li><code>-s</code> 系统预装的程序</li>
+<li><code>-e</code> 没有阻止的程序</li>
+<li><code>-r</code> 正在运行的程序</li>
+<li><code>-g</code> <code>谷</code>歌家族的程序</li>
+<li><code>-sg</code> 除谷歌家族外的系统程序</li>
+</ul>
+
+<h2><a href="http://developer.android.com/intl/zh-tw/reference/android/app/ActivityManager.RunningAppProcessInfo.html#constants">进程级别</a></h2>
+
+<h3>后台(background)</h3>
+
+<p>可被回收的后台进程。(译者注：或译缓存的后台进程，不需要主动清理。)</p>
+
+<h3>空(empty)</h3>
+
+<p>进程不包含任何正在运行的代码。</p>
+
+<h3>前台(foreground)</h3>
+
+<p>进程正在前台运行，也是你正在使用的应用。（译者注：当你在“<code>阻止运行</code>”中查看进程状态时，“<code>阻止运行</code>”永远是前台。）</p>
+
+<h3>前台服务(foreground service, 自Android 6.0)</h3>
+
+<p>进程包含前台服务，比如播放音乐等，通常表明正在处理一些用户关心的事情。</p>
+
+<h3>无(gone, 自Android 5.0)</h3>
+
+<p>进程不存在。</p>
+
+<h3>察觉(perceptible)</h3>
+
+<p>虽然用户不能直接注意到，但是某种层次上可以感觉到（译者注：如输入法）。</p>
+
+<h3>服务(service)</h3>
+
+<p>包含需要持续运行的服务。这些是已经启动的后台服务，用户并不能注意到，它们也有可能被系统回收（虽然从设计上会被一直运行下去）。</p>
+
+<h3>前台休眠(top sleeping，自Android 6.0)</h3>
+
+<p>进程在前台运行，但是设备正在休眠，所以用户看不见。这意味着用户并不能真正注意到它，因为看不见也无法操作，但是当设备解锁时期望立即看到，所以也非常重要。</p>
+
+<h3>可见(visible)</h3>
+
+<p>进程对用户可见，虽然不一定是最近的前台。它可能运行在当前前台后的窗口，虽然已经暂停并且保存状态，也无法使用，但是某种层次上用户能见到；也可能是系统控制下的其它重要服务。</p>
+
+<h2>项目</h2>
+
+<p>“<code>阻止运行</code>”开源，项目地址：<a href="https://github.com/liudongmiao/ForceStopGB">ForceStopGB - GitHub</a>。如果喜欢，请随意捐赠。</p>
+</body>
+</html>

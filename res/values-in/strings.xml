@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Prevent Running</string>
+
+    <string name="soak_version">Ini bukan versi rilis, dan mungkin memblokir perangkatmu. Jika kamu tidak suka untuk berpartisipasi, tolong hapus pemasangan dan kembali gunakan versi rilis.</string>
+
+    <!-- xposed -->
+    <string name="xposed_summary">Mencegah berjalannya aplikasi.</string>
+    <string name="xposed_disabled">Tolong aktifkan \"Prevent Running\" di \"Xposed Installer\", atau matikan kemudian aktifkan \"Prevent Running\".</string>
+    <string name="install_internal">Prevent Running harus dipasang di penyimpanan internal.</string>
+    <string name="no_xposed">Tolong instal \"Xposed Installer\".</string>
+
+    <!-- receiver -->
+    <string name="no_prevents">Tolong atur daftar pencegahan.</string>
+    <string name="updated_prevents">Daftar pencegahan diupdate ke %1$d</string>
+    <string name="not_supported">ROM tidak didukung, tolong laporkan kesalahan.</string>
+
+    <!-- main activity -->
+    <string name="version_mismatch">Tolong boot ulang untuk mengaktifkan versi sekarang</string>
+    <string name="reboot">Boot ulang</string>
+    <string name="are_you_sure">Apa kamu yakin?</string>
+    <string name="applications">Aplikasi</string>
+    <string name="prevent_list">Daftar Pencegahan</string>
+    <string name="prevent">Pencegahan Otomatis</string>
+    <string name="remove">Hapus Pencegahan</string>
+
+    <!-- search hint -->
+    <string name="query_hint">\"-3\" untuk aplikasi pengguna</string>
+    <string name="query_hint_system">\"-s\" untuk aplikasi sistem</string>
+
+    <!-- main menu -->
+    <string name="switch_theme">Ubah tema</string>
+    <string name="user_guide">Bantuan pengguna</string>
+
+    <!-- app status -->
+    <string name="retrieving">Mengambil status, silahkan tunggu. . .</string>
+    <string name="loading">Memuat. . .</string>
+    <string name="not_running">(tidak berjalan)</string>
+    <!-- http://developer.android.com/reference/android/app/ActivityManager.RunningAppProcessInfo.html#constants -->
+    <string name="importance_background">Latar belakang</string>
+    <string name="importance_foreground">Latar depan</string>
+    <string name="importance_empty">Kosong</string>
+    <string name="importance_perceptible">Terlihat</string>
+    <string name="importance_service">Layanan</string>
+    <string name="importance_visible">Nyata</string>
+    <string name="importance_gone">Hilang</string>
+    <string name="importance_foreground_service">Latar depan Layanan</string>
+    <string name="importance_top_sleeping">Tidur tertinggi</string>
+    <string name="importance_service_not_started">Layanan (Belum dimulai)</string>
+
+    <!-- app menu -->
+    <string name="app_info">Info Aplikasi</string>
+    <string name="open">Buka</string>
+    <string name="uninstall">Hapus Pemasangan</string>
+    <string name="app_notifications">Pemberitahuan aplikasi</string>
+
+    <!-- advanced settings -->
+    <string name="destroy_processes">Jangan simpan proses</string>
+    <string name="destroy_processes_summary">Paksa berhenti aplikasi setelah pengguna meniadakan semua aktifitas (disarankan off)</string>
+    <string name="backup">Cadangkan</string>
+    <string name="backup_prevent_list">Cadangkan daftar pencegahan ke penyimpanan eksternal</string>
+    <string name="lock_sync">Kunci Sync</string>
+    <string name="lock_sync_settings">Cegah aplikasi dari menyalakan item sync yang dinonaktifkan</string>
+    <string name="auto_prevent">Auto mencegah</string>
+    <string name="auto_update_prevent">Auto mencegah aplikasi baru</string>
+    <string name="use_app_standby">Aplikasi siaga</string>
+    <string name="use_app_standby_settings">Gunakan siaga daripada henti paksa aplikasi</string>
+    <string name="allow_empty_sender">Allow Unknown Sender (English)</string>
+    <string name="allow_empty_sender_in_service">Allow unknown sender to start service, which is useful to open some apps directly through notification or widget, however, it may has side effects (English)</string>
+    <string name="force_stop_signature_apps">Force Stop Signature Apps (English)</string>
+    <string name="force_stop_uncheckable_signature_apps">It\'s uncheckable, and cannot be added to prevent list without a \"prevent all\" license (English)</string>
+    <string name="force_stop_label">Paksa berhenti aplikasi latar belakang</string>
+    <string name="force_stop_summary">Layar mati, dan setelah %1$s ketidakaktifan dengan aplikasi latar belakang</string>
+    <string name="force_stop_never">Jangan pernah (Disarankan)</string>
+    <string name="force_stop_5min">5 menit</string>
+    <string name="force_stop_10min">10 menit</string>
+    <string name="force_stop_15min">15 menit</string>
+    <string name="force_stop_30min">30 menit</string>
+    <string name="force_stop_1hour">1 jam</string>
+
+    <!-- request license -->
+    <string name="no_license">Silahkan menyumbangkan setidaknya 2 usd, kemudian hubungi pengembang untuk mendapatkannya.</string>
+    <string name="no_valid_license">Lisensi ini untuk \"%1$s\", kamu tidak punya izin untuk menggunakannya. Harap minta yang baru.</string>
+    <string name="email_request">Email</string>
+    <string name="copy_request">@android:string/copy</string>
+
+    <!-- user guide menu -->
+    <string name="donate">Donasi</string>
+    <string name="version">Versi</string>
+    <string name="feedback">Umpan balik</string>
+    <string name="report_bug">Laporkan kesalahan</string>
+    <string name="request_license">Minta lisensi</string>
+    <string name="advanced_settings">Setelan lanjutan</string>
+    <string name="choose_email">Silahkan pilih EMail klien</string>
+
+    <!-- donation -->
+    <string name="donation">Jangan ragu untuk donasi jika kamu suka.</string>
+    <string name="select_qr_code">Pilih Kode QR dari Album</string>
+    <string name="paypal">PayPal</string>
+
+    <!-- version -->
+    <string name="licensed">Berlisensi</string>
+
+    <!-- google play in-app billing -->
+    <string name="play_verify_error">Kegagalan untuk memverifikasi pembelian Anda, jangan merusak Google Play In-app Billing.</string>
+
+</resources>

@@ -1,0 +1,1428 @@
+baksmali ... -b -s [-x] ...
+
+-b,--no-debug-info
+	don't write out debug info (.local, .param, .line, etc.)
+
+-s,--sequential-labels
+	create label names using a sequential numbering scheme per label type, rather than using the bytecode address
+
+--- aosp-6.0/com/android/server/IntentResolver.smali
++++ services/com/android/server/IntentResolver.smali
+@@ -283,11 +283,11 @@
+ 
+     invoke-virtual/range {p1 .. p1}, Landroid/content/Intent;->getPackage()Ljava/lang/String;
+ 
+     move-result-object v19
+ 
+-    invoke-virtual/range {p1 .. p1}, Landroid/content/Intent;->isExcludingStopped()Z
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->isExcludingStopped(Landroid/content/Intent;)Z
+ 
+     move-result v12
+ 
+     if-eqz p3, :cond_2
+ 
+@@ -549,11 +549,11 @@
+ 
+     move-object/from16 v6, p6
+ 
+     move-object/from16 v8, p2
+ 
+-    invoke-virtual/range {v3 .. v9}, Landroid/content/IntentFilter;->match(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;Ljava/lang/String;)I
++    invoke-static/range {v3 .. v9}, Lcom/android/server/am/PreventRunningUtils;->match(Landroid/content/IntentFilter;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;Ljava/lang/String;)I
+ 
+     move-result v17
+ 
+     if-ltz v17, :cond_c
+ 
+--- aosp-6.0/com/android/server/am/ActivityManagerService.smali
++++ services/com/android/server/am/ActivityManagerService.smali
+@@ -2147,10 +2147,12 @@
+ 
+     new-instance v1, Ljava/lang/StringBuilder;
+ 
+     invoke-direct {v1}, Ljava/lang/StringBuilder;-><init>()V
+ 
++    invoke-static/range {p0 .. p0}, Lcom/android/server/am/PreventRunningUtils;->init(Lcom/android/server/am/ActivityManagerService;)V
++
+     const-string/jumbo v2, "Memory class: "
+ 
+     invoke-virtual {v1, v2}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+     move-result-object v1
+@@ -9494,10 +9496,13 @@
+     iput-object v11, v7, Lcom/android/server/am/ProcessRecord;->waitingToKill:Ljava/lang/String;
+ 
+     goto :goto_5
+ 
+     :cond_a
++    # FIXME: verify vXX from Landroid/content/ComponentName;
++    invoke-static {v0}, Lcom/android/server/am/PreventRunningUtils;->onCleanUpRemovedTask(Landroid/content/ComponentName;)V
++
+     return-void
+ .end method
+ 
+ .method private cleanupDisabledPackageComponentsLocked(Ljava/lang/String;IZ[Ljava/lang/String;)V
+     .registers 19
+@@ -20956,10 +20961,15 @@
+     return v13
+ 
+     :cond_5
+     iget-object v13, v6, Lcom/android/server/am/ProcessRecord;->pkgDeps:Landroid/util/ArraySet;
+ 
++    # FIXME: verify vXX from Landroid/util/ArraySet;
++    invoke-static {v13}, Lcom/android/server/am/PreventRunningUtils;->isDep(Landroid/util/ArraySet;)Z
++
++    move-result v13
++
+     if-eqz v13, :cond_8
+ 
+     iget-object v13, v6, Lcom/android/server/am/ProcessRecord;->pkgDeps:Landroid/util/ArraySet;
+ 
+     invoke-virtual {v13, p1}, Landroid/util/ArraySet;->contains(Ljava/lang/Object;)Z
+@@ -29586,10 +29596,12 @@
+ 
+     invoke-virtual {v5, p2}, Ljava/lang/StringBuilder;->append(I)Ljava/lang/StringBuilder;
+ 
+     move-result-object v5
+ 
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->onAppDied(Lcom/android/server/am/ProcessRecord;)V
++
+     const-string/jumbo v6, ") has died"
+ 
+     invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
+ 
+     move-result-object v5
+@@ -31616,11 +31628,18 @@
+ 
+     move-object/from16 v7, p7
+ 
+     move/from16 v8, p8
+ 
++    # .method public bindService(Landroid/app/IApplicationThread;Landroid/os/IBinder;Landroid/content/Intent;Ljava/lang/String;Landroid/app/IServiceConnection;ILjava/lang/String;I)I
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->setSenderInBindService(Landroid/app/IApplicationThread;)V
++
+     invoke-virtual/range {v0 .. v8}, Lcom/android/server/am/ActiveServices;->bindServiceLocked(Landroid/app/IApplicationThread;Landroid/os/IBinder;Landroid/content/Intent;Ljava/lang/String;Landroid/app/IServiceConnection;ILjava/lang/String;I)I
++
++    move-result v0
++
++    invoke-static {v0}, Lcom/android/server/am/PreventRunningUtils;->clearSenderInBindService(I)I
+     :try_end_0
+     .catchall {:try_start_0 .. :try_end_0} :catchall_0
+ 
+     move-result v0
+ 
+@@ -31697,10 +31716,13 @@
+ 
+     invoke-static {}, Landroid/os/Binder;->getCallingUid()I
+ 
+     move-result v17
+ 
++    # .method public final broadcastIntent(Landroid/app/IApplicationThread;Landroid/content/Intent;Ljava/lang/String;Landroid/content/IIntentReceiver;ILjava/lang/String;Landroid/os/Bundle;[Ljava/lang/String;ILandroid/os/Bundle;ZZI)I
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->setSenderInBroadcastIntent(Landroid/app/IApplicationThread;)V
++
+     invoke-static {}, Landroid/os/Binder;->clearCallingIdentity()J
+ 
+     move-result-wide v20
+ 
+     if-eqz v3, :cond_0
+@@ -31736,10 +31758,17 @@
+ 
+     move/from16 v18, p13
+ 
+     invoke-direct/range {v2 .. v18}, Lcom/android/server/am/ActivityManagerService;->broadcastIntentLocked(Lcom/android/server/am/ProcessRecord;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;Landroid/content/IIntentReceiver;ILjava/lang/String;Landroid/os/Bundle;[Ljava/lang/String;ILandroid/os/Bundle;ZZIII)I
+ 
++    # .method public final broadcastIntent(Landroid/app/IApplicationThread;Landroid/content/Intent;Ljava/lang/String;Landroid/content/IIntentReceiver;ILjava/lang/String;Landroid/os/Bundle;[Ljava/lang/String;ILandroid/os/Bundle;ZZI)I
++    move-result v2
++
++    move-object/from16 v0, p2
++
++    invoke-static {v2, v0}, Lcom/android/server/am/PreventRunningUtils;->onBroadcastIntent(ILandroid/content/Intent;)I
++
+     move-result v19
+ 
+     invoke-static/range {v20 .. v21}, Landroid/os/Binder;->restoreCallingIdentity(J)V
+     :try_end_0
+     .catchall {:try_start_0 .. :try_end_0} :catchall_0
+@@ -58973,10 +59002,15 @@
+     invoke-static {p1}, Lcom/android/server/am/ActivityRecord;->getStackLocked(Landroid/os/IBinder;)Lcom/android/server/am/ActivityStack;
+ 
+     move-result-object v4
+ 
+     invoke-virtual {v4, v3}, Lcom/android/server/am/ActivityStack;->moveTaskToBackLocked(I)Z
++
++    move-result v4
++
++    # .method public moveActivityTaskToBack(Landroid/os/IBinder;Z)Z
++    invoke-static {v4, p1}, Lcom/android/server/am/PreventRunningUtils;->onMoveActivityTaskToBack(ZLandroid/os/IBinder;)Z
+     :try_end_3
+     .catchall {:try_start_3 .. :try_end_3} :catchall_0
+ 
+     move-result v4
+ 
+@@ -69714,10 +69748,15 @@
+ 
+     invoke-virtual/range {v0 .. v11}, Lcom/android/server/am/ActivityManagerService;->startActivityAsUser(Landroid/app/IApplicationThread;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;Landroid/os/IBinder;Ljava/lang/String;IILandroid/app/ProfilerInfo;Landroid/os/Bundle;I)I
+ 
+     move-result v0
+ 
++    # .method public final startActivity(Landroid/app/IApplicationThread;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;Landroid/os/IBinder;Ljava/lang/String;IILandroid/app/ProfilerInfo;Landroid/os/Bundle;)I
++    invoke-static {v0, p1, p3}, Lcom/android/server/am/PreventRunningUtils;->onStartActivity(ILandroid/app/IApplicationThread;Landroid/content/Intent;)I
++
++    move-result v0
++
+     return v0
+ .end method
+ 
+ .method public final startActivityAndWait(Landroid/app/IApplicationThread;Ljava/lang/String;Landroid/content/Intent;Ljava/lang/String;Landroid/os/IBinder;Ljava/lang/String;IILandroid/app/ProfilerInfo;Landroid/os/Bundle;I)Landroid/app/IActivityManager$WaitResult;
+     .registers 33
+@@ -72193,10 +72232,21 @@
+ .end method
+ 
+ .method final startProcessLocked(Ljava/lang/String;Landroid/content/pm/ApplicationInfo;ZILjava/lang/String;Landroid/content/ComponentName;ZZIZLjava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/Runnable;)Lcom/android/server/am/ProcessRecord;
+     .registers 27
+ 
++    invoke-static/range {p2 .. p6}, Lcom/android/server/am/PreventRunningUtils;->hookStartProcessLocked(Landroid/content/pm/ApplicationInfo;ZILjava/lang/String;Landroid/content/ComponentName;)Z
++
++    move-result v0
++
++    if-nez v0, :cond_o
++
++    const/4 v0, 0x0
++
++    return-object v0
++
++    :cond_o
+     invoke-static {}, Landroid/os/SystemClock;->elapsedRealtime()J
+ 
+     move-result-wide v10
+ 
+     if-nez p8, :cond_3
+@@ -72816,10 +72866,13 @@
+ 
+     invoke-static {}, Landroid/os/Binder;->getCallingUid()I
+ 
+     move-result v5
+ 
++    # .method public startService(Landroid/app/IApplicationThread;Landroid/content/Intent;Ljava/lang/String;Ljava/lang/String;I)Landroid/content/ComponentName;
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->setSenderInStartService(Landroid/app/IApplicationThread;)V
++
+     invoke-static {}, Landroid/os/Binder;->clearCallingIdentity()J
+ 
+     move-result-wide v8
+ 
+     iget-object v0, p0, Lcom/android/server/am/ActivityManagerService;->mServices:Lcom/android/server/am/ActiveServices;
+@@ -72834,10 +72887,15 @@
+ 
+     move/from16 v7, p5
+ 
+     invoke-virtual/range {v0 .. v7}, Lcom/android/server/am/ActiveServices;->startServiceLocked(Landroid/app/IApplicationThread;Landroid/content/Intent;Ljava/lang/String;IILjava/lang/String;I)Landroid/content/ComponentName;
+ 
++    # .method public startService(Landroid/app/IApplicationThread;Landroid/content/Intent;Ljava/lang/String;Ljava/lang/String;I)Landroid/content/ComponentName;
++    move-result-object v0
++
++    invoke-static {v0}, Lcom/android/server/am/PreventRunningUtils;->clearSenderInStartService(Landroid/content/ComponentName;)Landroid/content/ComponentName;
++
+     move-result-object v10
+ 
+     invoke-static {v8, v9}, Landroid/os/Binder;->restoreCallingIdentity(J)V
+     :try_end_0
+     .catchall {:try_start_0 .. :try_end_0} :catchall_0
+--- aosp-6.0/com/android/server/am/ActivityStack.smali
++++ services/com/android/server/am/ActivityStack.smali
+@@ -3708,10 +3708,13 @@
+ 
+     move-object/from16 v0, v35
+ 
+     invoke-interface {v3, v4, v5, v6, v0}, Landroid/app/IApplicationThread;->scheduleResumeActivity(Landroid/os/IBinder;IZLandroid/os/Bundle;)V
+ 
++    # FIXME: verify vXX from Lcom/android/server/am/ActivityRecord;
++    invoke-static/range {v26 .. v26}, Lcom/android/server/am/PreventRunningUtils;->onResumeActivity(Lcom/android/server/am/ActivityRecord;)V
++
+     move-object/from16 v0, p0
+ 
+     iget-object v3, v0, Lcom/android/server/am/ActivityStack;->mStackSupervisor:Lcom/android/server/am/ActivityStackSupervisor;
+ 
+     invoke-virtual {v3}, Lcom/android/server/am/ActivityStackSupervisor;->checkReadyForSleepLocked()V
+@@ -5360,10 +5363,12 @@
+     iget-boolean v7, p1, Lcom/android/server/am/ActivityRecord;->finishing:Z
+ 
+     iget v8, p1, Lcom/android/server/am/ActivityRecord;->configChangeFlags:I
+ 
+     invoke-interface {v5, v6, v7, v8}, Landroid/app/IApplicationThread;->scheduleDestroyActivity(Landroid/os/IBinder;ZI)V
++
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->onDestroyActivity(Lcom/android/server/am/ActivityRecord;)V
+     :try_end_0
+     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+ 
+     :cond_2
+     :goto_1
+@@ -13485,10 +13490,13 @@
+     move v5, p1
+ 
+     move v7, p4
+ 
+     invoke-interface/range {v2 .. v7}, Landroid/app/IApplicationThread;->schedulePauseActivity(Landroid/os/IBinder;ZZIZ)V
++
++    # FIXME: verify vXX from Lcom/android/server/am/ActivityRecord;
++    invoke-static {v1, p1}, Lcom/android/server/am/PreventRunningUtils;->onUserLeavingActivity(Lcom/android/server/am/ActivityRecord;Z)V
+     :try_end_0
+     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+ 
+     :goto_2
+     if-nez p2, :cond_7
+--- aosp-6.0/com/android/server/am/ActivityStackSupervisor.smali
++++ services/com/android/server/am/ActivityStackSupervisor.smali
+@@ -7385,10 +7385,12 @@
+ 
+     move-result v20
+ 
+     invoke-interface/range {v4 .. v21}, Landroid/app/IApplicationThread;->scheduleLaunchActivity(Landroid/content/Intent;Landroid/os/IBinder;ILandroid/content/pm/ActivityInfo;Landroid/content/res/Configuration;Landroid/content/res/Configuration;Landroid/content/res/CompatibilityInfo;Ljava/lang/String;Lcom/android/internal/app/IVoiceInteractor;ILandroid/os/Bundle;Landroid/os/PersistableBundle;Ljava/util/List;Ljava/util/List;ZZLandroid/app/ProfilerInfo;)V
+ 
++    invoke-static/range {p1 .. p1}, Lcom/android/server/am/PreventRunningUtils;->onLaunchActivity(Lcom/android/server/am/ActivityRecord;)V
++
+     move-object/from16 v0, p2
+ 
+     iget-object v4, v0, Lcom/android/server/am/ProcessRecord;->info:Landroid/content/pm/ApplicationInfo;
+ 
+     iget v4, v4, Landroid/content/pm/ApplicationInfo;->privateFlags:I
+--- aosp-6.0/com/android/server/am/PreventRunningUtils.smali
++++ services/com/android/server/am/PreventRunningUtils.smali
+@@ -0,0 +1,410 @@
++.class public Lcom/android/server/am/PreventRunningUtils;
++.super Ljava/lang/Object;
++.source "PreventRunningUtils.java"
++
++
++# static fields
++.field private static mAm:Lcom/android/server/am/ActivityManagerService;
++
++.field private static mPreventRunning:Lme/piebridge/PreventRunning;
++
++
++# direct methods
++.method static constructor <clinit>()V
++    .registers 1
++
++    new-instance v0, Lme/piebridge/PreventRunning;
++
++    invoke-direct {v0}, Lme/piebridge/PreventRunning;-><init>()V
++
++    sput-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    return-void
++.end method
++
++.method private constructor <init>()V
++    .registers 1
++
++    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++
++    return-void
++.end method
++
++.method public static clearSenderInBindService(I)I
++    .registers 3
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    const/4 v1, 0x0
++
++    invoke-virtual {v0, v1}, Lme/piebridge/PreventRunning;->setSender(Ljava/lang/String;)V
++
++    return p0
++.end method
++
++.method public static clearSenderInStartService(Landroid/content/ComponentName;)Landroid/content/ComponentName;
++    .registers 4
++
++    const/4 v0, 0x0
++
++    sget-object v1, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v1, v0}, Lme/piebridge/PreventRunning;->setSender(Ljava/lang/String;)V
++
++    if-eqz p0, :cond_0
++
++    invoke-virtual {p0}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
++
++    move-result-object v1
++
++    const-string v2, "!"
++
++    invoke-virtual {v1, v2}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_0
++
++    move-object p0, v0
++
++    :cond_0
++    return-object p0
++.end method
++
++.method private static forToken(Landroid/os/IBinder;)Lcom/android/server/am/ActivityRecord;
++    .registers 2
++
++    invoke-static {p0}, Lcom/android/server/am/ActivityRecord;->forTokenLocked(Landroid/os/IBinder;)Lcom/android/server/am/ActivityRecord;
++
++    move-result-object v0
++
++    return-object v0
++.end method
++
++.method public static hookStartProcessLocked(Landroid/content/pm/ApplicationInfo;ZILjava/lang/String;Landroid/content/ComponentName;)Z
++    .registers 7
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    sget-object v1, Lcom/android/server/am/PreventRunningUtils;->mAm:Lcom/android/server/am/ActivityManagerService;
++
++    iget-object v1, v1, Lcom/android/server/am/ActivityManagerService;->mContext:Landroid/content/Context;
++
++    invoke-virtual {v0, v1, p0, p3, p4}, Lme/piebridge/PreventRunning;->hookStartProcessLocked(Landroid/content/Context;Landroid/content/pm/ApplicationInfo;Ljava/lang/String;Landroid/content/ComponentName;)Z
++
++    move-result v0
++
++    return v0
++.end method
++
++.method public static init(Lcom/android/server/am/ActivityManagerService;)V
++    .registers 1
++
++    sput-object p0, Lcom/android/server/am/PreventRunningUtils;->mAm:Lcom/android/server/am/ActivityManagerService;
++
++    return-void
++.end method
++
++.method public static isDep(Landroid/util/ArraySet;)Z
++    .registers 2
++    .annotation system Ldalvik/annotation/Signature;
++        value = {
++            "(",
++            "Landroid/util/ArraySet",
++            "<",
++            "Ljava/lang/String;",
++            ">;)Z"
++        }
++    .end annotation
++
++    const/4 v0, 0x0
++
++    return v0
++.end method
++
++.method public static isExcludingStopped(Landroid/content/Intent;)Z
++    .registers 3
++
++    invoke-virtual {p0}, Landroid/content/Intent;->getAction()Ljava/lang/String;
++
++    move-result-object v0
++
++    invoke-virtual {p0}, Landroid/content/Intent;->isExcludingStopped()Z
++
++    move-result v1
++
++    if-eqz v1, :cond_0
++
++    if-eqz v0, :cond_0
++
++    sget-object v1, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v1, v0}, Lme/piebridge/PreventRunning;->isExcludingStopped(Ljava/lang/String;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_0
++
++    const/4 v1, 0x1
++
++    :goto_0
++    return v1
++
++    :cond_0
++    const/4 v1, 0x0
++
++    goto :goto_0
++.end method
++
++.method public static match(Landroid/content/IntentFilter;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;Ljava/lang/String;)I
++    .registers 15
++    .annotation system Ldalvik/annotation/Signature;
++        value = {
++            "(",
++            "Landroid/content/IntentFilter;",
++            "Ljava/lang/String;",
++            "Ljava/lang/String;",
++            "Ljava/lang/String;",
++            "Landroid/net/Uri;",
++            "Ljava/util/Set",
++            "<",
++            "Ljava/lang/String;",
++            ">;",
++            "Ljava/lang/String;",
++            ")I"
++        }
++    .end annotation
++
++    invoke-virtual/range {p0 .. p6}, Landroid/content/IntentFilter;->match(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;Ljava/lang/String;)I
++
++    move-result v1
++
++    if-ltz v1, :cond_0
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    move-object v2, p0
++
++    move-object v3, p1
++
++    move-object v4, p2
++
++    move-object v5, p3
++
++    move-object v6, p4
++
++    move-object v7, p5
++
++    invoke-virtual/range {v0 .. v7}, Lme/piebridge/PreventRunning;->match(ILjava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;)I
++
++    move-result v1
++
++    :cond_0
++    return v1
++.end method
++
++.method public static onAppDied(Lcom/android/server/am/ProcessRecord;)V
++    .registers 2
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v0, p0}, Lme/piebridge/PreventRunning;->onAppDied(Ljava/lang/Object;)V
++
++    return-void
++.end method
++
++.method public static onBroadcastIntent(ILandroid/content/Intent;)I
++    .registers 4
++
++    if-ltz p0, :cond_0
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v0, p1}, Lme/piebridge/PreventRunning;->onBroadcastIntent(Landroid/content/Intent;)V
++
++    :cond_0
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    const/4 v1, 0x0
++
++    invoke-virtual {v0, v1}, Lme/piebridge/PreventRunning;->setSender(Ljava/lang/String;)V
++
++    return p0
++.end method
++
++.method public static onCleanUpRemovedTask(Landroid/content/ComponentName;)V
++    .registers 3
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {p0}, Landroid/content/ComponentName;->getPackageName()Ljava/lang/String;
++
++    move-result-object v1
++
++    invoke-virtual {v0, v1}, Lme/piebridge/PreventRunning;->onCleanUpRemovedTask(Ljava/lang/String;)V
++
++    return-void
++.end method
++
++.method public static onDestroyActivity(Lcom/android/server/am/ActivityRecord;)V
++    .registers 2
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v0, p0}, Lme/piebridge/PreventRunning;->onDestroyActivity(Ljava/lang/Object;)V
++
++    return-void
++.end method
++
++.method public static onLaunchActivity(Lcom/android/server/am/ActivityRecord;)V
++    .registers 2
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v0, p0}, Lme/piebridge/PreventRunning;->onLaunchActivity(Ljava/lang/Object;)V
++
++    return-void
++.end method
++
++.method public static onMoveActivityTaskToBack(ZLandroid/os/IBinder;)Z
++    .registers 5
++
++    if-eqz p0, :cond_0
++
++    invoke-static {p1}, Lcom/android/server/am/PreventRunningUtils;->forToken(Landroid/os/IBinder;)Lcom/android/server/am/ActivityRecord;
++
++    move-result-object v0
++
++    sget-object v2, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    if-eqz v0, :cond_1
++
++    iget-object v1, v0, Lcom/android/server/am/ActivityRecord;->packageName:Ljava/lang/String;
++
++    :goto_0
++    invoke-virtual {v2, v1}, Lme/piebridge/PreventRunning;->onMoveActivityTaskToBack(Ljava/lang/String;)V
++
++    :cond_0
++    return p0
++
++    :cond_1
++    const/4 v1, 0x0
++
++    goto :goto_0
++.end method
++
++.method public static onResumeActivity(Lcom/android/server/am/ActivityRecord;)V
++    .registers 2
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v0, p0}, Lme/piebridge/PreventRunning;->onResumeActivity(Ljava/lang/Object;)V
++
++    return-void
++.end method
++
++.method public static onStartActivity(ILandroid/app/IApplicationThread;Landroid/content/Intent;)I
++    .registers 6
++
++    if-ltz p0, :cond_0
++
++    if-eqz p2, :cond_0
++
++    const-string v1, "android.intent.category.HOME"
++
++    invoke-virtual {p2, v1}, Landroid/content/Intent;->hasCategory(Ljava/lang/String;)Z
++
++    move-result v1
++
++    if-eqz v1, :cond_0
++
++    sget-object v1, Lcom/android/server/am/PreventRunningUtils;->mAm:Lcom/android/server/am/ActivityManagerService;
++
++    invoke-virtual {v1, p1}, Lcom/android/server/am/ActivityManagerService;->getRecordForAppLocked(Landroid/app/IApplicationThread;)Lcom/android/server/am/ProcessRecord;
++
++    move-result-object v0
++
++    if-eqz v0, :cond_0
++
++    sget-object v1, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    iget-object v2, v0, Lcom/android/server/am/ProcessRecord;->info:Landroid/content/pm/ApplicationInfo;
++
++    iget-object v2, v2, Landroid/content/pm/ApplicationInfo;->packageName:Ljava/lang/String;
++
++    invoke-virtual {v1, v2}, Lme/piebridge/PreventRunning;->onStartHomeActivity(Ljava/lang/String;)V
++
++    :cond_0
++    return p0
++.end method
++
++.method public static onUserLeavingActivity(Lcom/android/server/am/ActivityRecord;Z)V
++    .registers 3
++
++    if-eqz p1, :cond_0
++
++    sget-object v0, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    invoke-virtual {v0, p0}, Lme/piebridge/PreventRunning;->onUserLeavingActivity(Ljava/lang/Object;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method private static setSender(Landroid/app/IApplicationThread;)V
++    .registers 4
++
++    sget-object v1, Lcom/android/server/am/PreventRunningUtils;->mAm:Lcom/android/server/am/ActivityManagerService;
++
++    invoke-virtual {v1, p0}, Lcom/android/server/am/ActivityManagerService;->getRecordForAppLocked(Landroid/app/IApplicationThread;)Lcom/android/server/am/ProcessRecord;
++
++    move-result-object v0
++
++    sget-object v2, Lcom/android/server/am/PreventRunningUtils;->mPreventRunning:Lme/piebridge/PreventRunning;
++
++    if-eqz v0, :cond_0
++
++    iget-object v1, v0, Lcom/android/server/am/ProcessRecord;->info:Landroid/content/pm/ApplicationInfo;
++
++    iget-object v1, v1, Landroid/content/pm/ApplicationInfo;->packageName:Ljava/lang/String;
++
++    :goto_0
++    invoke-virtual {v2, v1}, Lme/piebridge/PreventRunning;->setSender(Ljava/lang/String;)V
++
++    return-void
++
++    :cond_0
++    invoke-static {}, Landroid/os/Binder;->getCallingUid()I
++
++    move-result v1
++
++    invoke-static {v1}, Ljava/lang/String;->valueOf(I)Ljava/lang/String;
++
++    move-result-object v1
++
++    goto :goto_0
++.end method
++
++.method public static setSenderInBindService(Landroid/app/IApplicationThread;)V
++    .registers 1
++
++    invoke-static {p0}, Lcom/android/server/am/PreventRunningUtils;->setSender(Landroid/app/IApplicationThread;)V
++
++    return-void
++.end method
++
++.method public static setSenderInBroadcastIntent(Landroid/app/IApplicationThread;)V
++    .registers 1
++
++    invoke-static {p0}, Lcom/android/server/am/PreventRunningUtils;->setSender(Landroid/app/IApplicationThread;)V
++
++    return-void
++.end method
++
++.method public static setSenderInStartService(Landroid/app/IApplicationThread;)V
++    .registers 1
++
++    invoke-static {p0}, Lcom/android/server/am/PreventRunningUtils;->setSender(Landroid/app/IApplicationThread;)V
++
++    return-void
++.end method
+--- aosp-6.0/me/piebridge/PreventRunning.smali
++++ services/me/piebridge/PreventRunning.smali
+@@ -0,0 +1,664 @@
++.class public Lme/piebridge/PreventRunning;
++.super Ljava/lang/Object;
++.source "PreventRunning.java"
++
++# interfaces
++.implements Lme/piebridge/PreventRunningHook;
++
++
++# static fields
++.field private static APKS:[Ljava/lang/String; = null
++
++.field private static final TAG:Ljava/lang/String; = "Prevent"
++
++.field private static final VERSION:I = 0x1339f96
++
++
++# instance fields
++.field private mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++
++# direct methods
++.method static constructor <clinit>()V
++    .registers 3
++
++    const/4 v0, 0x6
++
++    new-array v0, v0, [Ljava/lang/String;
++
++    const/4 v1, 0x0
++
++    const-string v2, "/data/app/me.piebridge.forcestopgb-1/base.apk"
++
++    aput-object v2, v0, v1
++
++    const/4 v1, 0x1
++
++    const-string v2, "/data/app/me.piebridge.forcestopgb-2/base.apk"
++
++    aput-object v2, v0, v1
++
++    const/4 v1, 0x2
++
++    const-string v2, "/data/app/me.piebridge.forcestopgb-3/base.apk"
++
++    aput-object v2, v0, v1
++
++    const/4 v1, 0x3
++
++    const-string v2, "/data/app/me.piebridge.forcestopgb-1.apk"
++
++    aput-object v2, v0, v1
++
++    const/4 v1, 0x4
++
++    const-string v2, "/data/app/me.piebridge.forcestopgb-2.apk"
++
++    aput-object v2, v0, v1
++
++    const/4 v1, 0x5
++
++    const-string v2, "/data/app/me.piebridge.forcestopgb-3.apk"
++
++    aput-object v2, v0, v1
++
++    sput-object v0, Lme/piebridge/PreventRunning;->APKS:[Ljava/lang/String;
++
++    return-void
++.end method
++
++.method public constructor <init>()V
++    .registers 7
++
++    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
++
++    sget-object v1, Lme/piebridge/PreventRunning;->APKS:[Ljava/lang/String;
++
++    array-length v4, v1
++
++    const/4 v3, 0x0
++
++    :goto_0
++    if-ge v3, v4, :cond_0
++
++    aget-object v0, v1, v3
++
++    new-instance v2, Ljava/io/File;
++
++    invoke-direct {v2, v0}, Ljava/io/File;-><init>(Ljava/lang/String;)V
++
++    invoke-virtual {v2}, Ljava/io/File;->exists()Z
++
++    move-result v5
++
++    if-eqz v5, :cond_1
++
++    invoke-direct {p0, v2}, Lme/piebridge/PreventRunning;->initPreventRunning(Ljava/io/File;)Z
++
++    move-result v5
++
++    if-eqz v5, :cond_1
++
++    :cond_0
++    return-void
++
++    :cond_1
++    add-int/lit8 v3, v3, 0x1
++
++    goto :goto_0
++.end method
++
++.method private initPreventRunning(Ljava/io/File;)Z
++    .registers 9
++
++    :try_start_0
++    invoke-static {}, Ljava/lang/Thread;->currentThread()Ljava/lang/Thread;
++
++    move-result-object v4
++
++    invoke-virtual {v4}, Ljava/lang/Thread;->getContextClassLoader()Ljava/lang/ClassLoader;
++
++    move-result-object v1
++
++    new-instance v0, Ldalvik/system/DexClassLoader;
++
++    invoke-virtual {p1}, Ljava/io/File;->getAbsolutePath()Ljava/lang/String;
++
++    move-result-object v4
++
++    const-string v5, "/cache"
++
++    const/4 v6, 0x0
++
++    invoke-direct {v0, v4, v5, v6, v1}, Ldalvik/system/DexClassLoader;-><init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/ClassLoader;)V
++
++    const-string v4, "Prevent"
++
++    new-instance v5, Ljava/lang/StringBuilder;
++
++    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
++
++    const-string v6, "loading PreventRunning(20160406) from "
++
++    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
++
++    move-result-object v5
++
++    invoke-virtual {v5, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
++
++    move-result-object v5
++
++    invoke-virtual {v5}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
++
++    move-result-object v5
++
++    invoke-static {v4, v5}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;)I
++
++    const-string v4, "me.piebridge.prevent.framework.PreventRunning"
++
++    invoke-virtual {v0, v4}, Ljava/lang/ClassLoader;->loadClass(Ljava/lang/String;)Ljava/lang/Class;
++
++    move-result-object v4
++
++    invoke-virtual {v4}, Ljava/lang/Class;->newInstance()Ljava/lang/Object;
++
++    move-result-object v4
++
++    check-cast v4, Lme/piebridge/PreventRunningHook;
++
++    iput-object v4, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-direct {p0}, Lme/piebridge/PreventRunning;->setVersion()V
++
++    invoke-direct {p0}, Lme/piebridge/PreventRunning;->setMethod()V
++    :try_end_0
++    .catch Ljava/lang/ClassNotFoundException; {:try_start_0 .. :try_end_0} :catch_0
++    .catch Ljava/lang/InstantiationException; {:try_start_0 .. :try_end_0} :catch_1
++    .catch Ljava/lang/IllegalAccessException; {:try_start_0 .. :try_end_0} :catch_2
++    .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_3
++
++    const/4 v4, 0x1
++
++    :goto_0
++    return v4
++
++    :catch_0
++    move-exception v2
++
++    const-string v4, "Prevent"
++
++    const-string v5, "cannot find class"
++
++    invoke-static {v4, v5, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    :goto_1
++    const/4 v4, 0x0
++
++    goto :goto_0
++
++    :catch_1
++    move-exception v2
++
++    const-string v4, "Prevent"
++
++    const-string v5, "cannot instance class"
++
++    invoke-static {v4, v5, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_1
++
++    :catch_2
++    move-exception v2
++
++    const-string v4, "Prevent"
++
++    const-string v5, "cannot access class"
++
++    invoke-static {v4, v5, v2}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_1
++
++    :catch_3
++    move-exception v3
++
++    const-string v4, "Prevent"
++
++    new-instance v5, Ljava/lang/StringBuilder;
++
++    invoke-direct {v5}, Ljava/lang/StringBuilder;-><init>()V
++
++    const-string v6, "cannot load PreventRunning from "
++
++    invoke-virtual {v5, v6}, Ljava/lang/StringBuilder;->append(Ljava/lang/String;)Ljava/lang/StringBuilder;
++
++    move-result-object v5
++
++    invoke-virtual {v5, p1}, Ljava/lang/StringBuilder;->append(Ljava/lang/Object;)Ljava/lang/StringBuilder;
++
++    move-result-object v5
++
++    invoke-virtual {v5}, Ljava/lang/StringBuilder;->toString()Ljava/lang/String;
++
++    move-result-object v5
++
++    invoke-static {v4, v5, v3}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_1
++.end method
++
++.method private setMethod()V
++    .registers 8
++
++    :try_start_0
++    iget-object v2, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-virtual {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
++
++    move-result-object v2
++
++    const-string v3, "setMethod"
++
++    const/4 v4, 0x1
++
++    new-array v4, v4, [Ljava/lang/Class;
++
++    const/4 v5, 0x0
++
++    const-class v6, Ljava/lang/String;
++
++    aput-object v6, v4, v5
++
++    invoke-virtual {v2, v3, v4}, Ljava/lang/Class;->getMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v1
++
++    iget-object v2, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    const/4 v3, 0x1
++
++    new-array v3, v3, [Ljava/lang/Object;
++
++    const/4 v4, 0x0
++
++    const-string v5, "native"
++
++    aput-object v5, v3, v4
++
++    invoke-virtual {v1, v2, v3}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
++    :try_end_0
++    .catch Ljava/lang/NoSuchMethodException; {:try_start_0 .. :try_end_0} :catch_0
++    .catch Ljava/lang/reflect/InvocationTargetException; {:try_start_0 .. :try_end_0} :catch_1
++    .catch Ljava/lang/IllegalAccessException; {:try_start_0 .. :try_end_0} :catch_2
++
++    :goto_0
++    return-void
++
++    :catch_0
++    move-exception v0
++
++    const-string v2, "Prevent"
++
++    const-string v3, "cannot find method"
++
++    invoke-static {v2, v3, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_0
++
++    :catch_1
++    move-exception v0
++
++    const-string v2, "Prevent"
++
++    const-string v3, "cannot invoke target"
++
++    invoke-static {v2, v3, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_0
++
++    :catch_2
++    move-exception v0
++
++    const-string v2, "Prevent"
++
++    const-string v3, "illegal access"
++
++    invoke-static {v2, v3, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_0
++.end method
++
++.method private setVersion()V
++    .registers 8
++
++    :try_start_0
++    iget-object v2, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-virtual {v2}, Ljava/lang/Object;->getClass()Ljava/lang/Class;
++
++    move-result-object v2
++
++    const-string v3, "setVersion"
++
++    const/4 v4, 0x1
++
++    new-array v4, v4, [Ljava/lang/Class;
++
++    const/4 v5, 0x0
++
++    sget-object v6, Ljava/lang/Integer;->TYPE:Ljava/lang/Class;
++
++    aput-object v6, v4, v5
++
++    invoke-virtual {v2, v3, v4}, Ljava/lang/Class;->getMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
++
++    move-result-object v1
++
++    iget-object v2, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    const/4 v3, 0x1
++
++    new-array v3, v3, [Ljava/lang/Object;
++
++    const/4 v4, 0x0
++
++    const v5, 0x1339f96
++
++    invoke-static {v5}, Ljava/lang/Integer;->valueOf(I)Ljava/lang/Integer;
++
++    move-result-object v5
++
++    aput-object v5, v3, v4
++
++    invoke-virtual {v1, v2, v3}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
++    :try_end_0
++    .catch Ljava/lang/NoSuchMethodException; {:try_start_0 .. :try_end_0} :catch_0
++    .catch Ljava/lang/reflect/InvocationTargetException; {:try_start_0 .. :try_end_0} :catch_1
++    .catch Ljava/lang/IllegalAccessException; {:try_start_0 .. :try_end_0} :catch_2
++
++    :goto_0
++    return-void
++
++    :catch_0
++    move-exception v0
++
++    const-string v2, "Prevent"
++
++    const-string v3, "cannot find method"
++
++    invoke-static {v2, v3, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_0
++
++    :catch_1
++    move-exception v0
++
++    const-string v2, "Prevent"
++
++    const-string v3, "cannot invoke target"
++
++    invoke-static {v2, v3, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_0
++
++    :catch_2
++    move-exception v0
++
++    const-string v2, "Prevent"
++
++    const-string v3, "illegal access"
++
++    invoke-static {v2, v3, v0}, Landroid/util/Log;->d(Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)I
++
++    goto :goto_0
++.end method
++
++
++# virtual methods
++.method public hookStartProcessLocked(Landroid/content/Context;Landroid/content/pm/ApplicationInfo;Ljava/lang/String;Landroid/content/ComponentName;)Z
++    .registers 6
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1, p2, p3, p4}, Lme/piebridge/PreventRunningHook;->hookStartProcessLocked(Landroid/content/Context;Landroid/content/pm/ApplicationInfo;Ljava/lang/String;Landroid/content/ComponentName;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    :cond_0
++    const/4 v0, 0x1
++
++    :goto_0
++    return v0
++
++    :cond_1
++    const/4 v0, 0x0
++
++    goto :goto_0
++.end method
++
++.method public isExcludingStopped(Ljava/lang/String;)Z
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->isExcludingStopped(Ljava/lang/String;)Z
++
++    move-result v0
++
++    if-eqz v0, :cond_1
++
++    :cond_0
++    const/4 v0, 0x1
++
++    :goto_0
++    return v0
++
++    :cond_1
++    const/4 v0, 0x0
++
++    goto :goto_0
++.end method
++
++.method public match(ILjava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;)I
++    .registers 16
++    .annotation system Ldalvik/annotation/Signature;
++        value = {
++            "(I",
++            "Ljava/lang/Object;",
++            "Ljava/lang/String;",
++            "Ljava/lang/String;",
++            "Ljava/lang/String;",
++            "Landroid/net/Uri;",
++            "Ljava/util/Set",
++            "<",
++            "Ljava/lang/String;",
++            ">;)I"
++        }
++    .end annotation
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    move v1, p1
++
++    move-object v2, p2
++
++    move-object v3, p3
++
++    move-object v4, p4
++
++    move-object v5, p5
++
++    move-object v6, p6
++
++    move-object v7, p7
++
++    invoke-interface/range {v0 .. v7}, Lme/piebridge/PreventRunningHook;->match(ILjava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;)I
++
++    move-result p1
++
++    :cond_0
++    return p1
++.end method
++
++.method public onAppDied(Ljava/lang/Object;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onAppDied(Ljava/lang/Object;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onBroadcastIntent(Landroid/content/Intent;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onBroadcastIntent(Landroid/content/Intent;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onCleanUpRemovedTask(Ljava/lang/String;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onCleanUpRemovedTask(Ljava/lang/String;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onDestroyActivity(Ljava/lang/Object;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onDestroyActivity(Ljava/lang/Object;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onLaunchActivity(Ljava/lang/Object;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onLaunchActivity(Ljava/lang/Object;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onMoveActivityTaskToBack(Ljava/lang/String;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onMoveActivityTaskToBack(Ljava/lang/String;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onResumeActivity(Ljava/lang/Object;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onResumeActivity(Ljava/lang/Object;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onStartHomeActivity(Ljava/lang/String;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onStartHomeActivity(Ljava/lang/String;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public onUserLeavingActivity(Ljava/lang/Object;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->onUserLeavingActivity(Ljava/lang/Object;)V
++
++    :cond_0
++    return-void
++.end method
++
++.method public setSender(Ljava/lang/String;)V
++    .registers 3
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    if-eqz v0, :cond_0
++
++    iget-object v0, p0, Lme/piebridge/PreventRunning;->mPreventRunning:Lme/piebridge/PreventRunningHook;
++
++    invoke-interface {v0, p1}, Lme/piebridge/PreventRunningHook;->setSender(Ljava/lang/String;)V
++
++    :cond_0
++    return-void
++.end method
+--- aosp-6.0/me/piebridge/PreventRunningHook.smali
++++ services/me/piebridge/PreventRunningHook.smali
+@@ -0,0 +1,58 @@
++.class public interface abstract Lme/piebridge/PreventRunningHook;
++.super Ljava/lang/Object;
++.source "PreventRunningHook.java"
++
++
++# virtual methods
++.method public abstract hookStartProcessLocked(Landroid/content/Context;Landroid/content/pm/ApplicationInfo;Ljava/lang/String;Landroid/content/ComponentName;)Z
++.end method
++
++.method public abstract isExcludingStopped(Ljava/lang/String;)Z
++.end method
++
++.method public abstract match(ILjava/lang/Object;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Landroid/net/Uri;Ljava/util/Set;)I
++    .annotation system Ldalvik/annotation/Signature;
++        value = {
++            "(I",
++            "Ljava/lang/Object;",
++            "Ljava/lang/String;",
++            "Ljava/lang/String;",
++            "Ljava/lang/String;",
++            "Landroid/net/Uri;",
++            "Ljava/util/Set",
++            "<",
++            "Ljava/lang/String;",
++            ">;)I"
++        }
++    .end annotation
++.end method
++
++.method public abstract onAppDied(Ljava/lang/Object;)V
++.end method
++
++.method public abstract onBroadcastIntent(Landroid/content/Intent;)V
++.end method
++
++.method public abstract onCleanUpRemovedTask(Ljava/lang/String;)V
++.end method
++
++.method public abstract onDestroyActivity(Ljava/lang/Object;)V
++.end method
++
++.method public abstract onLaunchActivity(Ljava/lang/Object;)V
++.end method
++
++.method public abstract onMoveActivityTaskToBack(Ljava/lang/String;)V
++.end method
++
++.method public abstract onResumeActivity(Ljava/lang/Object;)V
++.end method
++
++.method public abstract onStartHomeActivity(Ljava/lang/String;)V
++.end method
++
++.method public abstract onUserLeavingActivity(Ljava/lang/Object;)V
++.end method
++
++.method public abstract setSender(Ljava/lang/String;)V
++.end method

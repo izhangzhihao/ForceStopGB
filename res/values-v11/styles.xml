@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="dark" parent="@android:style/Theme.Holo">
+        <item name="color_dangerous">@color/color_dangerous_dark</item>
+    </style>
+
+    <style name="light" parent="@android:style/Theme.Holo.Light">
+        <item name="color_dangerous">@color/color_dangerous_light</item>
+    </style>
+
+</resources>

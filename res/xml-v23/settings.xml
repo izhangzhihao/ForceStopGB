@@ -1,0 +1,58 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="applications"
+        android:title="@string/prevent_list">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="destroy_processes"
+            android:summary="@string/destroy_processes_summary"
+            android:title="@string/destroy_processes" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="backup_prevent_list"
+            android:summary="@string/backup_prevent_list"
+            android:title="@string/backup" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="lock_sync_settings"
+            android:summary="@string/lock_sync_settings"
+            android:title="@string/lock_sync" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="auto_prevent"
+            android:summary="@string/auto_update_prevent"
+            android:title="@string/auto_prevent" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="use_app_standby"
+            android:summary="@string/use_app_standby_settings"
+            android:title="@string/use_app_standby" />
+
+        <me.piebridge.prevent.ui.ListPreferenceSummary
+            android:defaultValue="-1"
+            android:entries="@array/force_stop_entries"
+            android:entryValues="@array/force_stop_values"
+            android:key="force_stop_timeout"
+            android:summary="@string/force_stop_summary"
+            android:title="@string/force_stop_label" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="allow_empty_sender"
+            android:summary="@string/allow_empty_sender_in_service"
+            android:title="@string/allow_empty_sender" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="stop_signature_apps"
+            android:summary="@string/force_stop_uncheckable_signature_apps"
+            android:title="@string/force_stop_signature_apps" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

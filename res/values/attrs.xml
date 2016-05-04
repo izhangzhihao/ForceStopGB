@@ -1,0 +1,5 @@
+<resources>
+
+    <attr name="color_dangerous" format="reference" />
+
+</resources>
